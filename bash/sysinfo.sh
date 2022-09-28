@@ -1,4 +1,4 @@
-#!/bin/bash/
+#!/bin/bash
 # This script displays host, OS, IP and storage information to the user
 
 # This is the FQDN of the system
