@@ -1,18 +1,34 @@
 #!/bin/bash
-# This script displays host, OS, IP and storage information to the user
+# This script displays host, OS, IP and storage information report to the user
+# for Bash Lab 2
 
-# This is the FQDN of the system
-echo "FQDN: " $(hostname -f)
+#################
+#   Variables   #
+#################
+# The system hostname
+hostname=$( hostname )
+# The Fully Qualified Domain Name
+fqdn=$( hostname -f )
+# The OS name and version
+osname=$( hostnamectl | grep 'Operating System' | cut -d ':' -f 2- | awk '{print $1,$2}' )
+osversion=$( hostnamectl | grep 'Kernel' |  cut -d ':' -f 2- | awk '{print $1,$2}' )
+# The system IP Address
+ipaddr=$( ip route | grep -w 'default' | awk '{print $3}' )
+# The available space on the primary disk
+space=$( df -h | grep -w '/' | awk '{print $4}' )
 
-# This is the host information containing OS name, version and distro
-echo "Host Information:" 
-hostnamectl
+# Displayed Report
+#################
+#     Main      #
+#################
+cat << EOF
 
-# These are all the IP addresses the machine has that are not on the 127 network
-echo "IP Addresses:"
-(ip a s ens33 || ip a s enp2s1) | grep inet | awk '{printf "%s ", $2}' 	
+Report for $hostname
+===============
+FQDN: $fqdn
+Operating System name and version: $osname/$osversion
+IP Address: $ipaddr
+Root Filesystem Free Space: $space
+===============
 
-# This is the amount of space available in the root filesystem displayed as human-friendly
-echo -e "\nRoot Filesystems Status:" 
-df -h | grep -w 'Filesystem\|/' 
-exit
+EOF
