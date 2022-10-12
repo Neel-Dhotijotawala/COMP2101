@@ -38,21 +38,22 @@ if [ $? -ne 0 ]; then
 	# if it is unsuccessful then it shows message and exits
 		echo "Container creation unsuccessful. Ending script execution"
 		exit 1
-	fi
+	fi	
+	while [ $(lxc list | grep -w "COMP2101-S22" | awk '{print $6}') = "|" ]; do
+		sleep 10
+	done
 fi
-
-
-##VARIABLES##
-ip=$(lxc list | grep "COMP2101" | awk '{print $6}')
-hostname="COMP2101-S22"
-#############
 
 # This block checks if the host COMP2101-S22 exists in /etc/hosts file
 grep -w "COMP2101-S22" /etc/hosts > /dev/null
 # if not then it adds it
 if [ $? -ne 0 ]; then
+	##VARIABLES##
+	ip=$(lxc list | grep -w "COMP2101-S22" | awk '{print $6}')
+	hostname="COMP2101-S22"
+	#############
 	echo "Adding COMP2101-S22 container to /etc/hosts"
-	sudo sed -i.bkp "$ a $ip $hostname" /etc/hosts
+	sudo sed -i.bkp " 2a $ip\t$hostname " /etc/hosts
 	if [ $? -ne 0 ]; then
 	# if it fails then it shows message and exits
 		echo "Appending failed. Ending script execution"
@@ -71,7 +72,6 @@ if [ $? -ne 0 ]; then
 		echo "Apache installation failed. Ending script execution"
 		exit 1
 	fi
-	lxc exec COMP2101-S22 -- exit
 fi
 
 # Cheching if curl is availabe on the system
@@ -84,7 +84,7 @@ if [ $? -ne 0 ]; then
 		echo "Curl installation failed. Ending script execution"
 		exit 1
 	fi
-if
+fi
 
 # This part retrieves the default web page of COMP2101-S22 apache server
 echo "Checking default web page retrival from container COMP2101-S22"
