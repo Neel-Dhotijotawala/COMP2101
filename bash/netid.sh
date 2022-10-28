@@ -32,6 +32,7 @@ while [ $# -gt 0 ]; do
 			;;
 		-v | --verbose )
 			verbose=yes
+			shift
 			;;
 		*)
 			myinterfacename=$1
