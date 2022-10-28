@@ -15,23 +15,32 @@
 # Usage:
 #   error-message ["some text to print to stderr"]
 function error-message {
-
+	echo "Help displayed to the user. No further script execution. Script terminated " >&2
+	exit 1
 }
 
 # This function will send a message to stderr and exit with a failure status
 # Usage:
 #   error-exit ["some text to print to stderr" [exit-status]]
 function error-exit {
-
+	displayhelp
+	echo "Invalid Command line argument, No further script execution. Script terminated " >&2
+	exit 1
 }
 #This function displays help information if the user asks for it on the command line or gives us a bad command line
 function displayhelp {
-
+	echo "Usage:$0 [-h | --help] [ --host ] [ --domain ] [ --ipconfig ] [ --os ] [ --cpu ] [ --memory ] [ --disk ] [ --printer ]"
 }
 
 # This function will remove all the temp files created by the script
 # The temp files are all named similarly, "/tmp/somethinginfo.$$"
 # A trap command is used after the function definition to specify this function is to be run if we get a ^C while running
+function cleanup {
+	rm -rf /tmp/sysinfo.$$ /tmp/memoryinfo.$$ /tmp/businfo.$$ /tmp/cpuinfo.$$ 
+	exit 1
+}
+
+trap cleanup INT
 
 # End of section to be done for TASK
 # Remainder of script does not require any modification, but may need to be examined in order to create the functions for TASK
@@ -50,7 +59,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     -h|--help)
       displayhelp
-      error-exit
+      error-message
       ;;
     --host)
       hostnamewanted=true
