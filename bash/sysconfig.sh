@@ -15,7 +15,7 @@
 # Usage:
 #   error-message ["some text to print to stderr"]
 function error-message {
-	echo "Help displayed to the user. No further script execution. Script terminated " >&2
+	echo "Help displayed to the user. " >&2
 }
 
 # This function will send a message to stderr and exit with a failure status
