@@ -16,7 +16,6 @@
 #   error-message ["some text to print to stderr"]
 function error-message {
 	echo "Help displayed to the user. No further script execution. Script terminated " >&2
-	exit 1
 }
 
 # This function will send a message to stderr and exit with a failure status
@@ -37,7 +36,6 @@ function displayhelp {
 # A trap command is used after the function definition to specify this function is to be run if we get a ^C while running
 function cleanup {
 	rm -rf /tmp/sysinfo.$$ /tmp/memoryinfo.$$ /tmp/businfo.$$ /tmp/cpuinfo.$$ 
-	exit 1
 }
 
 trap cleanup INT

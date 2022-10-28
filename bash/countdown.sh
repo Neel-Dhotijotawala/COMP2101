@@ -97,7 +97,7 @@ sleepCount=$numberOfSleeps
 doCountdown | dialog --gauge "Remaining Time" 7 60
 stty sane
 
-trap IntTrap SIGINT
-trap QuitTrap SIGQUIT
+trap IntTrap INT
+trap QuitTrap QUIT
 
 echo "Wait counter expired, exiting peacefully"
