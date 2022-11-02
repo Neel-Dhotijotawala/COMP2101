@@ -15,7 +15,7 @@
 # Usage:
 #   error-message ["some text to print to stderr"]
 function error-message {
-	echo "Help displayed to the user. " >&2
+	logger -t $(basename "$0") -i -p user.err -s "Help displayed to the user."
 }
 
 # This function will send a message to stderr and exit with a failure status
@@ -23,12 +23,12 @@ function error-message {
 #   error-exit ["some text to print to stderr" [exit-status]]
 function error-exit {
 	displayhelp
-	echo "Invalid Command line argument, No further script execution. Script terminated " >&2
+	logger -t $(basename "$0") -i -p user.err -s "Invalid Command line argument, No further script execution. Script terminated."
 	exit 1
 }
 #This function displays help information if the user asks for it on the command line or gives us a bad command line
 function displayhelp {
-	echo "Usage:$0 [-h | --help] [ --host ] [ --domain ] [ --ipconfig ] [ --os ] [ --cpu ] [ --memory ] [ --disk ] [ --printer ]"
+	echo "Usage:$(basename $0) [-h | --help] [ --host ] [ --domain ] [ --ipconfig ] [ --os ] [ --cpu ] [ --memory ] [ --disk ] [ --printer ]"
 }
 
 # This function will remove all the temp files created by the script
@@ -38,7 +38,7 @@ function cleanup {
 	rm -rf /tmp/sysinfo.$$ /tmp/memoryinfo.$$ /tmp/businfo.$$ /tmp/cpuinfo.$$ 
 }
 
-trap cleanup INT
+trap cleanup SIGINT
 
 # End of section to be done for TASK
 # Remainder of script does not require any modification, but may need to be examined in order to create the functions for TASK
@@ -57,7 +57,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     -h|--help)
       displayhelp
-      error-message
+      error-exit
       ;;
     --host)
       hostnamewanted=true
@@ -157,7 +157,3 @@ cat /tmp/sysreport.$$
 
 # cleanup temporary files
 cleanup
-
-
-
-
